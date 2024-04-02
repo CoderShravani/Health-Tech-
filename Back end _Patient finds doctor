@@ -1,0 +1,48 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const { Doctor } = require('./models/doctorModel');
+const { Patient } = require('./models/patientModel');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(bodyParser.json());
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/doctor_db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('Error connecting to MongoDB:', err);
+});
+
+// Get all doctors
+app.get('/api/doctors', async (req, res) => {
+    try {
+        const doctors = await Doctor.find();
+        res.json(doctors);
+    } catch (err) {
+        console.error('Error fetching doctors:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Get all patients
+app.get('/api/patients', async (req, res) => {
+    try {
+        const patients = await Patient.find();
+        res.json(patients);
+    } catch (err) {
+        console.error('Error fetching patients:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(Server running on port ${PORT});
+});
