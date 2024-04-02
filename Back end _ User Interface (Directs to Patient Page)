@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Mode</title>
+    <!-- Add your patient mode CSS styles here -->
+</head>
+<body>
+    <h2>Welcome to Patient Mode</h2>
+    <!-- Add patient mode content and functionality here -->
+</body>
+</html>
