@@ -1,0 +1,50 @@
+/Aim
+// Insert sample patients data
+mongo doctor_db --eval "db.patients.insertMany([...])"
+
+// Insert sample doctors data
+mongo doctor_db --eval "db.doctors.insertMany([...])"
+
+//Sample
+// Sample patients data
+[
+    {
+        "name": "John Fernandes",
+        "age": 35,
+        "gender": "Male",
+        "diagnosis": "Hypertension"
+    },
+    {
+        "name": "Rahul Sharma",
+        "age": 45,
+        "gender": "Female",
+        "diagnosis": "Diabetes"
+    },
+    // Add more patient data as needed
+]
+
+// Sample doctors data
+[
+    {
+        "name": "Dr. Pranjal Sharma",
+        "specialization": "Cardiology",
+        "hospital": "ABC Hospital"
+    },
+    {
+        "name": "Dr. Sarah Verma",
+        "specialization": "Gynaecology",
+        "hospital": "XYZ Hospital"
+    },
+    // Add more doctor data as needed
+]
+
+//Example
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/doctor_db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('Error connecting to MongoDB:', err);
+});
