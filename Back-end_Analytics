@@ -1,0 +1,99 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(bodyParser.json());
+
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/medical_platform_db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('Error connecting to MongoDB:', err);
+});
+
+// Interaction Model
+const Interaction = mongoose.model('Interaction', {
+    userId: String,
+    action: String,
+    timestamp: { type: Date, default: Date.now }
+});
+
+// Route to log user interactions
+app.post('/api/interactions', async (req, res) => {
+    try {
+        const { userId, action } = req.body;
+        await Interaction.create({ userId, action });
+        res.status(201).json({ message: 'Interaction logged successfully' });
+    } catch (err) {
+        console.error('Error logging interaction:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Appointment Model
+const Appointment = mongoose.model('Appointment', {
+    patientId: String,
+    doctorId: String,
+    date: Date
+});
+
+// Route to log appointments
+app.post('/api/appointments', async (req, res) => {
+    try {
+        const { patientId, doctorId, date } = req.body;
+        await Appointment.create({ patientId, doctorId, date });
+        res.status(201).json({ message: 'Appointment logged successfully' });
+    } catch (err) {
+        console.error('Error logging appointment:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Feedback Model
+const Feedback = mongoose.model('Feedback', {
+    userId: String,
+    rating: Number,
+    comments: String,
+    timestamp: { type: Date, default: Date.now }
+});
+
+// Route to log feedback
+app.post('/api/feedback', async (req, res) => {
+    try {
+        const { userId, rating, comments } = req.body;
+        await Feedback.create({ userId, rating, comments });
+        res.status(201).json({ message: 'Feedback logged successfully' });
+    } catch (err) {
+        console.error('Error logging feedback:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Route to generate reports
+app.get('/api/reports', async (req, res) => {
+    try {
+        // Generate reports based on collected data
+        // For example, calculate average ratings, analyze appointment trends, etc.
+        // Return the generated reports
+        const report = {
+            averageRating: await Feedback.aggregate([{ $group: { _id: null, avgRating: { $avg: "$rating" } } }]),
+            appointmentTrends: await Appointment.aggregate([{ $group: { _id: { $month: "$date" }, totalAppointments: { $sum: 1 } } }])
+        };
+        res.json(report);
+    } catch (err) {
+        console.error('Error generating report:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(Server running on port ${PORT});
+});
