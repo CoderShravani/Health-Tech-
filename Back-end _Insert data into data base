@@ -1,0 +1,23 @@
+db.resources.insertMany([
+    {
+        "title": "Introduction to Cardiology",
+        "description": "A comprehensive guide to the field of cardiology.",
+        "type": "article",
+        "url": "https://example.com/cardiology_intro",
+        "uploadedBy": "admin"
+    },
+    {
+        "title": "Recent Advances in Cancer Treatment",
+        "description": "An overview of the latest developments in cancer treatment.",
+        "type": "research paper",
+        "url": "https://example.com/cancer_advancements",
+        "uploadedBy": "admin"
+    },
+    {
+        "title": "Understanding Diabetes Mellitus",
+        "description": "A detailed explanation of diabetes mellitus and its management.",
+        "type": "article",
+        "url": "https://example.com/diabetes_mellitus",
+        "uploadedBy": "admin"
+    }
+])
