@@ -1,0 +1,123 @@
+[14:54, 4/3/2024] Shravani Kulkarni: const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios'); // For making HTTP requests to external APIs
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(bodyParser.json());
+
+// Route for payment processing integration
+app.post('/api/payment', async (req, res) => {
+    try {
+        // Extract payment information from request body
+        const { amount, cardNumber, expiryDate, cvv } = req.body;
+        
+        // Make HTTP request to payment processing API
+        const paymentResponse = await axios.post('https://payment-api.com/process', {
+            amount,
+            cardNumber,
+            expiryDate,
+            cvv
+        });
+
+        // Return payment response …
+[14:54, 4/3/2024] Shravani Kulkarni: Back-end _ For processing payments
+[15:14, 4/3/2024] Shravani Kulkarni: const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(bodyParser.json());
+
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/medical_platform_db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('Error connecting to MongoDB:', err);
+});
+
+// Quiz Model
+const Quiz = mongoose.model('Quiz', {
+    title: String,
+    questions: [{ question: String, options: [String], correctAnswer: Number }]
+});
+
+// User Progress Model
+const UserProgress = mongoose.model('UserProgress', {
+    userId: String,
+    quizId: String,
+    scores: [Number],
+    completed: Boolean
+});
+
+// Route to create a new quiz
+app.post('/api/quizzes', async (req, res) => {
+    try {
+        const { title, questions } = req.body;
+        const quiz = await Quiz.create({ title, questions });
+        res.status(201).json(quiz);
+    } catch (err) {
+        console.error('Error creating quiz:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Route to get all quizzes
+app.get('/api/quizzes', async (req, res) => {
+    try {
+        const quizzes = await Quiz.find();
+        res.json(quizzes);
+    } catch (err) {
+        console.error('Error fetching quizzes:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Route to start a quiz for a user
+app.post('/api/quizzes/start', async (req, res) => {
+    try {
+        const { userId, quizId } = req.body;
+        const userProgress = await UserProgress.create({ userId, quizId, scores: [], completed: false });
+        res.status(201).json(userProgress);
+    } catch (err) {
+        console.error('Error starting quiz:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Route to submit quiz answers and update user progress
+app.post('/api/quizzes/submit', async (req, res) => {
+    try {
+        const { userId, quizId, answers } = req.body;
+        const userProgress = await UserProgress.findOne({ userId, quizId });
+        if (!userProgress) {
+            return res.status(404).json({ error: 'User progress not found' });
+        }
+        // Calculate score
+        let score = 0;
+        answers.forEach((answer, index) => {
+            if (answer === quiz.questions[index].correctAnswer) {
+                score++;
+            }
+        });
+        userProgress.scores.push(score);
+        userProgress.completed = true;
+        await userProgress.save();
+        res.json({ message: 'Quiz submitted successfully', score });
+    } catch (err) {
+        console.error('Error submitting quiz:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(Server running on port ${PORT});
+});
