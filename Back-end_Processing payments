@@ -1,0 +1,67 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios'); // For making HTTP requests to external APIs
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(bodyParser.json());
+
+// Route for payment processing integration
+app.post('/api/payment', async (req, res) => {
+    try {
+        // Extract payment information from request body
+        const { amount, cardNumber, expiryDate, cvv } = req.body;
+        
+        // Make HTTP request to payment processing API
+        const paymentResponse = await axios.post('https://payment-api.com/process', {
+            amount,
+            cardNumber,
+            expiryDate,
+            cvv
+        });
+
+        // Return payment response to client
+        res.json(paymentResponse.data);
+    } catch (error) {
+        console.error('Error processing payment:', error.response.data);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Route for fetching lab results from external system
+app.get('/api/lab-results/:patientId', async (req, res) => {
+    try {
+        const patientId = req.params.patientId;
+
+        // Make HTTP request to lab results API
+        const labResultsResponse = await axios.get(https://lab-results-api.com/results/${patientId});
+
+        // Return lab results to client
+        res.json(labResultsResponse.data);
+    } catch (error) {
+        console.error('Error fetching lab results:', error.response.data);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Route for accessing electronic health records (EHR) from external system
+app.get('/api/ehr/:patientId', async (req, res) => {
+    try {
+        const patientId = req.params.patientId;
+
+        // Make HTTP request to EHR API
+        const ehrResponse = await axios.get(https://ehr-api.com/records/${patientId});
+
+        // Return EHR data to client
+        res.json(ehrResponse.data);
+    } catch (error) {
+        console.error('Error accessing EHR:', error.response.data);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(Server running on port ${PORT});
+});
